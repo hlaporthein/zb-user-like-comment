@@ -38,3 +38,11 @@ define('ZB_ULC_PLUGIN_LANG', 'zebra');
 /**
  * Create Like Table
  */
+require_once plugin_dir_path(__FILE__) . 'inc/user-like-table.php';
+
+
+/**
+ * Database table create with hook
+ */
+register_activation_hook(__FILE__, '_zb_ulc_table_create');
+register_deactivation_hook(__FILE__, '_zb_ulc_table_delete');
