@@ -46,3 +46,11 @@ require_once plugin_dir_path(__FILE__) . 'inc/user-like-table.php';
  */
 register_activation_hook(__FILE__, '_zb_ulc_table_create');
 register_deactivation_hook(__FILE__, '_zb_ulc_table_delete');
+
+
+
+/**
+ * Require File Include
+ */
+require_once  plugin_dir_path(__FILE__) .'inc/query.php';
+require_once  plugin_dir_path(__FILE__) .'inc/helper.php';

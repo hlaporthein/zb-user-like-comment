@@ -57,6 +57,7 @@ abstract class ZB_ULC_DB_HELPER {
 		return $all;
 	}
 
+
 	/**
 	 * Get a value by a condition
 	 *
@@ -117,4 +118,117 @@ abstract class ZB_ULC_DB_HELPER {
 
 		return $deleted;
 	}
+}
+
+/**
+ * Class ZB_Table Extending ZB_Base_Custom_Data Class
+ */
+class ZB_ULC_Table extends ZB_ULC_DB_HELPER {
+	public function __construct( $tableName ) {
+		parent::__construct( $tableName );
+	}
+}
+
+
+/**
+ * insert use like data to table
+ *
+ *
+ * @return InsertQuery|int return like table id
+ */
+function _zb_user_like_action_to_db( $user_id, $comment_id ) {
+	global $wpdb;
+
+	$table_name       = $wpdb->prefix . ZB_ULC_PLUGIN_TABLE_NAME;
+	$table            = new ZB_ULC_Table( $table_name );
+	$check_data_exist = $wpdb->get_var( "SELECT id FROM $table_name WHERE user_id = $user_id AND comment_id = $comment_id" );
+
+
+	if ( $check_data_exist ) {
+		$result = (int) $check_data_exist;
+	} else {
+		$result = $table->insert( array( 'user_id' => $user_id, 'comment_id' => $comment_id ) );
+
+	}
+
+	return $result;
+
+}
+
+
+/**
+ * comment is already like or not,
+ * @like is true, @unlike is false
+ *
+ * @return bool
+ */
+function _zb_this_comment_like( $user_id, $comment_id ) {
+	global $wpdb;
+
+	$table_name       = $wpdb->prefix . ZB_ULC_PLUGIN_TABLE_NAME;
+	$check_query      = "SELECT * FROM $table_name WHERE user_id= $user_id AND comment_id = $comment_id";
+	$check_data_exist = $wpdb->query( $check_query );
+
+	return ( ! empty( $check_data_exist ) ) ? true : false;
+
+}
+
+
+/**
+ * Get user like comment list by array
+ *
+ *
+ * @param $user_id
+ *
+ * @return array|int user like comment list by array
+ */
+function _zb_this_user_like_comment_by_user_id( $user_id ) {
+	global $wpdb;
+
+	$table_name       = $wpdb->prefix . ZB_ULC_PLUGIN_TABLE_NAME;
+	$table            = new ZB_ULC_Table( ( $table_name ) );
+	$total_user_likes = $table->get_by( array( 'user_id' => $user_id ), '=' );
+
+	if ( ! empty( $total_user_likes ) ) {
+
+		foreach ( $total_user_likes as $like ) {
+			$result[] = (int) $like->comment_id;
+		}
+
+	} else {
+		$result = 0;
+	}
+
+	return $result;
+
+}
+
+
+/**
+ * Get user id list by array though comment id
+ *
+ *
+ * @param $comment_id
+ *
+ * @return array|int userid list by array
+ */
+function _zb_this_comment_like_users_by_comment_id($comment_id) {
+	global $wpdb;
+
+	$table_name       = $wpdb->prefix . ZB_ULC_PLUGIN_TABLE_NAME;
+	$table            = new ZB_ULC_Table( ( $table_name ) );
+	$total_user_likes = $table->get_by( array( 'comment_id' => $comment_id ), '=' );
+
+	if ( ! empty( $total_user_likes ) ) {
+
+		foreach ( $total_user_likes as $like ) {
+			$result[] = (int) $like->user_id;
+		}
+
+	} else {
+		$result = 0;
+	}
+
+	return $result;
+
 }
