@@ -29,3 +29,12 @@
 if ( ! defined( 'WPINC' ) ) {
 	die;
 }
+
+define('ZB_ULC_PLUGIN_VERSION', '1.0.0');
+define('ZB_ULC_PLUGIN_TABLE_NAME', 'user_like');
+define('ZB_ULC_PLUGIN_LANG', 'zebra');
+
+
+/**
+ * Create Like Table
+ */
